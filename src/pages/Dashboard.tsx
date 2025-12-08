@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDaysIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, BellIcon } from '@heroicons/react/24/outline';
+import { CalendarDaysIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, BellIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import { translations, type Language } from '../lib/translations';
 import { formatDoctorName } from '../utils/format';
 import { supabase } from '../lib/supabaseClient';
@@ -63,7 +63,8 @@ const Dashboard = () => {
         .from('messages')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id)
-        .eq('is_from_user', false); // Count messages FROM doctor
+        .eq('is_from_user', false) // Count messages FROM doctor
+        .eq('read', false); // Only count unread
 
       setStats({
         records: recordCount || 0,
@@ -119,7 +120,7 @@ const Dashboard = () => {
           ) : nextAppointment ? (
             <>
               <p className="text-primary-light mb-6 font-medium">
-                {nextAppointment.doctor?.full_name ? formatDoctorName(nextAppointment.doctor.full_name) : nextAppointment.type} • {nextAppointment.doctor?.clinic_name || 'Clinic Room 3'}
+                {nextAppointment.doctor?.full_name ? formatDoctorName(nextAppointment.doctor.full_name) : nextAppointment.type} • {nextAppointment.doctor?.clinic_name || 'Pending Assignment'}
               </p>
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold">
@@ -128,6 +129,17 @@ const Dashboard = () => {
                 <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-semibold">
                   {new Date(nextAppointment.date).toLocaleTimeString(localeMap[lang], { hour: '2-digit', minute: '2-digit' })}
                 </div>
+                {nextAppointment.status === 'approved' && (
+                  <a
+                    href={`https://meet.jit.si/medilink-${nextAppointment.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white text-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors flex items-center gap-2"
+                  >
+                    <VideoCameraIcon className="h-4 w-4" />
+                    Join Call
+                  </a>
+                )}
               </div>
             </>
           ) : (

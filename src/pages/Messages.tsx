@@ -165,6 +165,23 @@ const Messages = () => {
       toast.error('Error fetching messages');
     } else {
       setMessages(data || []);
+
+      // Mark as read if there are unread messages from the other party
+      const unreadIds = data
+        ?.filter(m => {
+          // If I am doctor, unread are from user (is_from_user = true)
+          // If I am patient, unread are from doctor (is_from_user = false)
+          const isFromOther = isDoctor ? m.is_from_user : !m.is_from_user;
+          return isFromOther && !m.read;
+        })
+        .map(m => m.id);
+
+      if (unreadIds && unreadIds.length > 0) {
+        await supabase
+          .from('messages')
+          .update({ read: true })
+          .in('id', unreadIds);
+      }
     }
     setLoading(false);
   };
@@ -307,7 +324,7 @@ const Messages = () => {
               </div>
               <div className="min-w-0">
                 <p className="font-bold text-sm truncate">
-                  {contact.role === 'General Practitioner' ? formatDoctorName(contact.name) : contact.name}
+                  {['General Practitioner', 'doctor', 'Doctor'].includes(contact.role) ? formatDoctorName(contact.name) : contact.name}
                 </p>
                 <p className={`text-xs truncate ${selectedContact?.id === contact.id ? 'text-blue-100' : 'text-slate-400'}`}>
                   {contact.role}
@@ -334,7 +351,7 @@ const Messages = () => {
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 text-base md:text-lg leading-tight">
-                  {selectedContact.role === 'General Practitioner' ? formatDoctorName(selectedContact.name) : selectedContact.name}
+                  {['General Practitioner', 'doctor', 'Doctor'].includes(selectedContact.role) ? formatDoctorName(selectedContact.name) : selectedContact.name}
                 </h3>
                 <p className="text-xs text-slate-500">{selectedContact.role}</p>
               </div>
@@ -420,7 +437,7 @@ const Messages = () => {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder={`Message ${selectedContact.role === 'General Practitioner' ? formatDoctorName(selectedContact.name) : selectedContact.name}...`}
+                  placeholder={`Message ${['General Practitioner', 'doctor', 'Doctor'].includes(selectedContact.role) ? formatDoctorName(selectedContact.name) : selectedContact.name}...`}
                   className="flex-1 pl-4 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all"
                 />
                 <button

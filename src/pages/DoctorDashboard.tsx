@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { UserGroupIcon, ClockIcon, CheckCircleIcon, XCircleIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, ClockIcon, CheckCircleIcon, XCircleIcon, VideoCameraIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { formatDoctorName } from '../utils/format';
 
@@ -149,6 +149,21 @@ const DoctorDashboard = () => {
             </div>
           </div>
         </div>
+
+        <div
+          onClick={() => window.location.href = '/doctor/records'}
+          className="bg-white p-6 rounded-3xl shadow-soft border border-slate-100 cursor-pointer hover:shadow-md transition-all group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+              <DocumentTextIcon className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-800">Records</h3>
+              <p className="text-sm text-slate-500">Search & Upload</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Patient List */}
@@ -209,6 +224,13 @@ const DoctorDashboard = () => {
                 {/* Locked Indicator & Video Call */}
                 {appt.status === 'approved' && appt.doctor_id && (
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => window.open(`/records/${appt.user_id}`, '_blank')}
+                      className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200"
+                      title="View Patient Records"
+                    >
+                      <DocumentTextIcon className="h-4 w-4" />
+                    </button>
                     <a
                       href={`https://meet.jit.si/medilink-${appt.id}`}
                       target="_blank"

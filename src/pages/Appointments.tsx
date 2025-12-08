@@ -5,6 +5,7 @@ import { CalendarIcon, ClockIcon, VideoCameraIcon, MapPinIcon, TrashIcon, ArrowP
 import toast from 'react-hot-toast'; // Import Toast
 import confetti from 'canvas-confetti';
 import { translations, type Language } from '../lib/translations';
+import { formatDoctorName } from '../utils/format';
 
 const Appointments = () => {
   const navigate = useNavigate();
@@ -236,7 +237,12 @@ const Appointments = () => {
                 {/* Details */}
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
-                    <h4 className="font-bold text-slate-800">{appt.type}</h4>
+                    <div>
+                      <h4 className="font-bold text-slate-800">
+                        {appt.doctor?.full_name ? formatDoctorName(appt.doctor.full_name) : appt.type}
+                      </h4>
+                      {appt.doctor?.full_name && <p className="text-xs text-slate-500">{appt.type}</p>}
+                    </div>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {appt.status}
                     </span>
@@ -248,7 +254,7 @@ const Appointments = () => {
                     </span>
                     <span className="flex items-center gap-1">
                       <MapPinIcon className="h-4 w-4" />
-                      {appt.doctor?.clinic_name || 'Clinic Room 3'}
+                      {appt.doctor?.clinic_name || 'Pending Assignment'}
                       {appt.doctor?.clinic_address && <span className="text-xs text-slate-400 ml-1">({appt.doctor.clinic_address})</span>}
                     </span>
                   </div>

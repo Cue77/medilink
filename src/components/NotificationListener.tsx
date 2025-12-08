@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
+import { formatDoctorName } from '../utils/format';
 
 const NotificationListener = () => {
     useEffect(() => {
@@ -31,7 +32,10 @@ const NotificationListener = () => {
                 } else {
                     if (newMsg.user_id === user.id && !newMsg.is_from_user) {
                         isForMe = true;
-                        title = `New Message from ${newMsg.contact_name}`;
+                        const senderName = ['General Practitioner', 'doctor', 'Doctor'].includes(newMsg.role)
+                            ? formatDoctorName(newMsg.contact_name)
+                            : newMsg.contact_name;
+                        title = `New Message from ${senderName}`;
                     }
                 }
 
