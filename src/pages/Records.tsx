@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { DocumentTextIcon, ArrowDownTrayIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { translations, type Language } from '../lib/translations';
+import { formatDoctorName } from '../utils/format';
 
 const Records = ({ userId }: { userId?: string }) => {
   const navigate = useNavigate();
@@ -87,6 +88,13 @@ const Records = ({ userId }: { userId?: string }) => {
     if (!fileToUpload) return;
     setUploading(true);
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error('You must be logged in to upload');
+      setUploading(false);
+      return;
+    }
+
     const fileExt = fileToUpload.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -108,10 +116,19 @@ const Records = ({ userId }: { userId?: string }) => {
       // Find doctor name if selected
       const docName = doctors.find(d => d.id === selectedDoctor)?.full_name;
 
-      // Logic: If userId is present, it's a doctor uploading -> 'Uploaded by Doctor'
+      // Fetch current user's profile to get their name
+      const { data: currentUserProfile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .single();
+
+      const currentUserName = currentUserProfile?.full_name;
+
+      // Logic: If userId is present, it's a doctor uploading -> 'Uploaded by Dr. Name'
       // If no userId, it's a patient. If they selected a doctor -> 'For Dr. X', else 'Uploaded by Patient'
       const doctorLabel = userId
-        ? 'Uploaded by Doctor'
+        ? (currentUserName ? `Uploaded by ${formatDoctorName(currentUserName)}` : 'Uploaded by Doctor')
         : (docName ? `For Dr. ${docName}` : 'Uploaded by Patient');
 
       const { error: dbError } = await supabase
