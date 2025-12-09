@@ -123,7 +123,7 @@ const Records = ({ userId }: { userId?: string }) => {
         .eq('id', user.id)
         .single();
 
-      const currentUserName = currentUserProfile?.full_name;
+      const currentUserName = currentUserProfile?.full_name || user.user_metadata?.full_name;
 
       // Logic: If userId is present, it's a doctor uploading -> 'Uploaded by Dr. Name'
       // If no userId, it's a patient. If they selected a doctor -> 'For Dr. X', else 'Uploaded by Patient'
