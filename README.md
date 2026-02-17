@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# MediLink – Patient Communication & Appointment Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MediLink is a healthcare-inspired Progressive Web Application designed to improve communication and appointment coordination between patients and healthcare providers.
 
-Currently, two official plugins are available:
+The project simulates real NHS workflow challenges such as scheduling delays, missed appointments and fragmented communication by providing a centralised messaging and booking platform.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Patient appointment booking and management
+* Secure user authentication
+* Messaging between patients and providers
+* Real-time scheduling updates
+* Responsive Progressive Web App (mobile & desktop support)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Frontend**
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* React
+* Tailwind CSS
+* HTML / CSS
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**Backend**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+* Node.js
+* Express
+* REST API architecture
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**Database**
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* MySQL / Supabase
+
+**Other Tools**
+
+* Git version control
+* Firebase services
+* PWA service workers
+
+---
+
+## System Architecture
+
+The application follows a client-server architecture:
+
+* React frontend communicates with REST API endpoints
+* Backend handles authentication, booking logic and validation
+* Database stores users, appointments and messages
+* Service workers enable offline capability
+
+---
+
+## Example API Endpoints
+
+| Method | Endpoint      | Description           |
+| ------ | ------------- | --------------------- |
+| POST   | /register     | Create new user       |
+| POST   | /login        | Authenticate user     |
+| GET    | /appointments | Retrieve appointments |
+| POST   | /appointments | Book appointment      |
+| POST   | /messages     | Send message          |
+
+---
+
+## Design Goals
+
+* Improve reliability of patient communication
+* Reduce appointment no-shows
+* Provide accessible multi-device experience
+* Demonstrate scalable backend architecture
+
+---
+
+## Running Locally
+
+### 1. Clone Repository
+
+git clone https://github.com/Cue77/medilink.git
+
+### 2. Install Dependencies
+
+npm install
+
+### 3. Configure Environment
+
+Create a .env file and add database credentials
+
+### 4. Run Server
+
+npm start
+
+---
+
+## Future Improvements
+
+* Automated testing suite
+* Role-based permissions
+* Email/SMS notifications
+* NHS API integration (simulated)
+
+---
+
+## Author
+
+**Emmanuel Ukan Ochicha**
+BSc Software Engineering – University of Bedfordshire
+
+Focused on backend systems, reliability and real-world problem solving.
